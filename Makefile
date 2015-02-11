@@ -135,6 +135,12 @@ else
  endif
 endif
 
+ifeq ($(GDB),1)
+  EXEC := gdb -args ./
+else
+  EXEC := ./
+endif
+
 CXX_FILES       = $(shell find $(SRC_DIR) -type f -name "*.cpp")
 OBJ_FILES       = $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%.o,$(CXX_FILES))
 DEP_FILES       = $(shell find $(DEP_DIR) -type f -name "*.dep" 2>/dev/null)
@@ -154,13 +160,13 @@ TESTS       = $(filter %-tests,$(LIBRARIES))
 CXXC          ?= $(CXX) $(CXX_FLAGS) $(CXX_INCLUDES) $(CXX_DEFINES)
 CXX           ?= c++
 CXX_PIC       ?= $(if $(OS_WINDOWS),,-fPIC)
-CXX_FLAGS     ?= $(CXX_STANDARD) -c $(CXX_WARNINGS) -ggdb $(CXX_PIC) $(CXX_FLAGS_$(CONF))
+CXX_FLAGS     ?= $(CXX_STANDARD) -pthread -c $(CXX_WARNINGS) -ggdb $(CXX_PIC) $(CXX_FLAGS_$(CONF))
 CXX_INCLUDES  ?= -I$(SRC_DIR) -I$(HEADER_DIR)
 CXX_STANDARD  ?= --std=c++11
 CXX_DEFINES   ?= 
 CXX_WARNINGS  ?= -Werror -Wall -Wextra
 LD             = $(CXX) $(LD_PATHS) $(LD_FLAGS)
-LD_FLAGS      ?= $(LD_FLAGS_$(CONF))
+LD_FLAGS      ?= -pthread $(LD_FLAGS_$(CONF))
 LD_PATHS      ?= 
 LD_LIBRARIES  ?= 
 SO             = $(CXX) $(SO_PATHS) $(SO_FLAGS)
@@ -233,11 +239,7 @@ define TEST_TEMPLATE
   .PHONY: $1
   $1 : $$(BIN_DIR)/$1
 	$$(QQ)echo " TEST  $1 $$(ARGS)"
-	$$Q./$$< $$(ARGS)
-
-  gdb-$1 : $$(BIN_DIR)/$1
-	$$(QQ)echo " GDB   $1 $$(ARGS)"
-	$$Qgdb -args $$< $$(ARGS)
+	$$Q$(EXEC)$$< $$(ARGS)
 endef
 
 $(foreach test,$(TESTS),$(eval $(call TEST_TEMPLATE,$(test))))
