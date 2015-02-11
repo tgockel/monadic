@@ -44,8 +44,8 @@ template <typename T> class completion_promise;
  *    no_value -> disabled     [label="disable"]
  *    no_value -> broken       [label="~completion_promise"]
  *    no_value -> has_callback [label="map, flatmap, ..."]
- *    no_value -> has_value    [label="set_result"]
- *    has_callback -> complete [label="set_result"]
+ *    no_value -> has_value    [label="set_value"]
+ *    has_callback -> complete [label="set_value"]
  *    has_value -> complete    [label="map, flatmap, ..."]
  *  }
  *  \enddot
@@ -70,6 +70,9 @@ struct completion_data
     std::function<void (exceptional<T>&&)> callback_;
 };
 
+/** A \c completion is a monadic version of a \c std::future. It can \e mostly be used as a drop-in replacement for a
+ *  \c std::future, with the added benefit of having functions like \c map and \c recover.
+**/
 template <typename T>
 class completion
 {
@@ -77,11 +80,17 @@ public:
     using promise_type = completion_promise<T>;
     
 public:
+    /** Get the current state of this instance. **/
     completion_state state() const
     {
         return impl_->state_;
     }
     
+    /** Call a given \a func with an <tt>exceptional&lt;T&gt;</tt> when this \c completion is delivered (in either
+     *  success or failure).
+     *  
+     *  \tparam Func <tt>void (*)(exceptional&lt;T&gt;&&)</tt>
+    **/
     template <typename Func>
     void on_complete(Func&& func)
     {
@@ -102,6 +111,15 @@ public:
         }
     }
     
+    /** Blocks waiting on the result of this completion. If the completion was completed in success, the value will be
+     *  returned (on \c void, nothing is returned). If the completion was completed in failure, the exception will be
+     *  thrown.
+     *  
+     *  \note
+     *  This is \e not the intended use for a \c completion and only exists for convenient compatibility with
+     *  \c std::future. While the majority of \c completion functions are implemented using spin locks, this function is
+     *  expected to block, so it relies on \c std::promise and \c std::future, which are slow by comparison.
+    **/
     T get()
     {
         std::promise<exceptional<T>> promise;
@@ -109,6 +127,9 @@ public:
         return promise.get_future().get().get();
     }
     
+    /** Disables this \c completion. It cannot be un-disabled! This is useful for notifying the thread fulfilling the
+     *  promise that the receiver no longer cares about the value and is free to abandon processing.
+    **/
     void disable()
     {
         unique_lock lock(impl_->protect_);
@@ -116,6 +137,30 @@ public:
         impl_->callback_ = nullptr;
     }
     
+    /** Perform the next step of the process when the value is delivered in success. The \a func is only called in the
+     *  success case (see \c recover for the failure case).
+     *  
+     *  \tparam Func <tt>R (*)(T&&)</tt> or <tt>R (*)()</tt> if \c T is \c void; \c R can be \c void
+     *  \param  func This function takes in the successful result of this completion and returns another value. The
+     *               result of this function will be delivered to the \c completion_promise that backs the \c completion
+     *               returned from this function.
+     *  \returns a \c completion that will be completed with the result of \a func.
+     *  
+     *  \example completion_chaining completion chaining
+     *  
+     *  \code
+     *  completion_promise<int> p;
+     *  completion<int>         c1 = p.get_completion();
+     *  completion<double>      c2 = c1.map([] (int x) { return double(x); });
+     *  completion<std::string> c3 = c2.map([] (double d) { return to_string(d); );
+     *  completion<void>        c4 = c3.map([] (std::string s) { std::cout << s; });
+     *  completion<int>         c5 = c4.map([] () { std::cout << std::endl; return 1; });
+     *  p.set_value(1);
+     *  c5.get();
+     *  \endcode
+     *  
+     *  \see recover
+    **/
     template <typename Func>
     auto map(Func&& func)
             -> completion<decltype(std::declval<exceptional<T>>().map(std::forward<Func>(func)).get())>
@@ -123,6 +168,48 @@ public:
         return wrap_call(std::forward<Func>(func), &exceptional<T>::map);
     }
     
+    /** Perform the next step of the process if the value is delivered in failure. The \a func is only called in the
+     *  failure case (see \c map for the success case).
+     *  
+     *  \tparam Func <tt>R (*)(std::exception_ptr&&)</tt>; \c R can be \c void
+     *  \param  func This function takes in an \c std::exception_ptr and returns some result to continue the chain with.
+     *               The result of this function will be delivered to the \c completion_promise that backs the
+     *               \c completion returned from this function. If the result of \a func is non-<tt>void</tt>, it must
+     *               be convertable to \c T -- the resulting completion is the common type of \c T and \c R. If the
+     *               result of \c func is \c void, then \c T must also be \c void.
+     *  \returns a \c completion that will be completed with the result of \a func.
+     *  
+     *  \example
+     *  
+     *  \code
+     *  completion_promise<int> p;
+     *  completion<void> c = p.get_completion()
+     *                        .map([] (int x) -> int { assert(false && "Will never be called"); return 0; })
+     *                        .recover([] (std::exception_ptr ex_ptr)
+     *                                 {
+     *                                     try
+     *                                     {
+     *                                         std::rethrow_exception(ex_ptr);
+     *                                     }
+     *                                     catch (const std::exception& ex)
+     *                                     {
+     *                                         return std::strlen(ex.what());
+     *                                     }
+     *                                 })
+     *                        // This will be called because we have "recovered":
+     *                        .map([] (int x) { return x * 2; })
+     *                        .map([] (int x) { std::cout << x << std::endl; });
+     *  try
+     *  {
+     *      throw std::logic_error("Something?");
+     *  }
+     *  catch (...)
+     *  {
+     *      p.set_exception(std::current_exception());
+     *  }
+     *  c.get();
+     *  \endcode
+    **/
     template <typename Func>
     auto recover(Func&& func)
             -> completion<decltype(std::declval<exceptional<T>>().recover(std::forward<Func>(func)).get())>
@@ -171,23 +258,36 @@ private:
     std::shared_ptr<completion_data<T>> impl_;
 };
 
+/** A \c completion_promise provides the promise of a delivery of some value to a single \c completion -- fulfilling the
+ *  same role of \c std::promise to \c std::future.
+**/
 template <typename T>
 class completion_promise
 {
 public:
+    /** Create a promise value. **/
     completion_promise() :
             completion_promise(std::make_shared<completion_data<T>>())
     { }
     
+    /** Create a promise with the given location to store data \a impl. The provided \c completion_data must be uniquely
+     *  used for this instance and cannot have been used before.
+     *  
+     *  \note
+     *  This constructor exists to enable bulk allocation of \c completion_data instances in non-critical sections of
+     *  code (as memory allocation can be expensive).
+    **/
     explicit completion_promise(std::shared_ptr<completion_data<T>> impl) :
             impl_(std::move(impl))
     { }
     
+    /** Get a \c completion to back this promise. It is expected to only be called once. **/
     completion<T> get_completion()
     {
         return completion<T>(impl_);
     }
     
+    /** Deliver a \a value to this completion. If the associated \c completion has a callback, it is called inline. **/
     template <typename U>
     void complete(exceptional<U> value)
     {
@@ -217,12 +317,14 @@ public:
         }
     }
     
+    /** Call \c complete with a successful value. **/
     template <typename... U>
     void set_value(U&&... args)
     {
         complete(exceptional<T>::success(std::forward<U>(args)...));
     }
     
+    /** Call \c complete with a failure. **/
     void set_exception(std::exception_ptr ex)
     {
         complete(exceptional<T>::failure(std::move(ex)));
