@@ -8,28 +8,22 @@ env:
     - GIT_EXPECTED_PATH=git://github.com/tgockel/monadic.git
   matrix:
     - CONF=cov     COMPILER=g++-4.9     PUBLISH_DOCS=0
-    - CONF=release COMPILER=g++-4.9     PUBLISH_DOCS=1
+    - CONF=release COMPILER=g++-4.9     PUBLISH_DOCS=0
     - CONF=debug   COMPILER=clang++-3.7 PUBLISH_DOCS=0
     - CONF=release COMPILER=clang++-3.7 PUBLISH_DOCS=0
 before_install:
   - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo apt-add-repository --yes ppa:boost-latest/ppa
   - sudo add-apt-repository --yes ppa:libreoffice/ppa 
   - if [[ ${COMPILER} == *"clang"* ]]; then sudo sh -c 'echo "deb http://llvm.org/apt/precise/ llvm-toolchain-precise main" >> /etc/apt/sources.list'; fi
   - sudo apt-get update
 install:
-  - sudo apt-get install --yes --force-yes libboost1.55-all-dev cmake
+  - sudo apt-get install --yes --force-yes cmake
   - if [[ ${COMPILER} != *"clang"* ]]; then sudo apt-get install --yes --force-yes ${COMPILER}; fi
   - if [[ ${COMPILER} == *"clang"* ]]; then sudo apt-get install --yes --force-yes clang-3.7;   fi
   - if [[ ${COVERAGE} -eq 1 ]];        then sudo pip install cpp-coveralls pyyaml;              fi
 script:
   - ${COMPILER} --version
-  - cmake -DCMAKE_CXX_COMPILER=${COMPILER}
-          -DCMAKE_BUILD_TYPE=${CONF}
-          -DUSE_BOOST_REGEX=${USE_BOOST_REGEX}
-          -DUSE_BOOST_STRING_VIEW=${USE_BOOST_STRING_VIEW}
-  - make CONF=${CONF} VERBOSE=1 COVERAGE=${COVERAGE}
-  - ./jsonv-tests
+  - make test CONF=${CONF} VERBOSE=1 COVERAGE=${COVERAGE}
   - if [[ ${COVERAGE} == 1 ]]; then ./config/upload-coverage; fi
 after_success:
   - if [[ ${PUBLISH_DOCS} == 0 ]]; then                             echo "Skipping documentation publishing due PUBLISH_DOCS=${PUBLISH_DOCS}";                                   exit 0; fi
