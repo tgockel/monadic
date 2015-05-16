@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>monadic++: Main Page</title>
+<title>monadic++: /home/travis/projects/monadic/include/monadic/completion.hpp</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -46,7 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('index.html','');});
+$(document).ready(function(){initNavTree('_2home_2travis_2projects_2monadic_2include_2monadic_2completion_8hpp-example.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -99,10 +99,50 @@ $(document).ready(function(){initNavTree('index.html','');});
 
 <div class="header">
   <div class="headertitle">
-<div class="title">monadic++ Documentation</div>  </div>
+<div class="title">/home/travis/projects/monadic/include/monadic/completion.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<p>Perform the next step of the process if the value is delivered in failure. The <em>func</em> is only called in the failure case (see <code>map</code> for the success case).</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Func</td><td><code>R (*)(std::exception_ptr&amp;&amp;)</code>; <code>R</code> can be <code>void</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func</td><td>This function takes in an <code>std::exception_ptr</code> and returns some result to continue the chain with. The result of this function will be delivered to the <code>completion_promise</code> that backs the <code>completion</code> returned from this function. If the result of <em>func</em> is non-<code>void</code>, it must be convertable to <code>T</code> &ndash; the resulting completion is the common type of <code>T</code> and <code>R</code>. If the result of <code>func</code> is <code>void</code>, then <code>T</code> must also be <code>void</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a <code>completion</code> that will be completed with the result of <em>func</em>.</dd></dl>
+<div class="fragment"><div class="line">completion_promise&lt;int&gt; p;</div>
+<div class="line">completion&lt;void&gt; c = p.get_completion()</div>
+<div class="line">                      .map([] (<span class="keywordtype">int</span> x) -&gt; <span class="keywordtype">int</span> { assert(<span class="keyword">false</span> &amp;&amp; <span class="stringliteral">&quot;Will never be called&quot;</span>); <span class="keywordflow">return</span> 0; })</div>
+<div class="line">                      .recover([] (std::exception_ptr ex_ptr)</div>
+<div class="line">                               {</div>
+<div class="line">                                   <span class="keywordflow">try</span></div>
+<div class="line">                                   {</div>
+<div class="line">                                       std::rethrow_exception(ex_ptr);</div>
+<div class="line">                                   }</div>
+<div class="line">                                   <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; ex)</div>
+<div class="line">                                   {</div>
+<div class="line">                                       <span class="keywordflow">return</span> std::strlen(ex.what());</div>
+<div class="line">                                   }</div>
+<div class="line">                               })</div>
+<div class="line">                      <span class="comment">// This will be called because we have &quot;recovered&quot;:</span></div>
+<div class="line">                      .map([] (<span class="keywordtype">int</span> x) { <span class="keywordflow">return</span> x * 2; })</div>
+<div class="line">                      .map([] (<span class="keywordtype">int</span> x) { std::cout &lt;&lt; x &lt;&lt; std::endl; });</div>
+<div class="line"><span class="keywordflow">try</span></div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">throw</span> std::logic_error(<span class="stringliteral">&quot;Something?&quot;</span>);</div>
+<div class="line">}</div>
+<div class="line"><span class="keywordflow">catch</span> (...)</div>
+<div class="line">{</div>
+<div class="line">    p.set_exception(std::current_exception());</div>
+<div class="line">}</div>
+<div class="line">c.get();</div>
+</div><!-- fragment --><div class="fragment"></div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
