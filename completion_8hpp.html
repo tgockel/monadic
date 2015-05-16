@@ -105,6 +105,7 @@ $(document).ready(function(){initNavTree('completion_8hpp.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
 <div class="title">completion.hpp File Reference</div>  </div>
@@ -133,6 +134,16 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonadic_1_1completion__promise.html">monadic::completion_promise&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <code><a class="el" href="classmonadic_1_1completion__promise.html" title="A completion_promise provides the promise of a delivery of some value to a single completion – fulfi...">completion_promise</a></code> provides the promise of a delivery of some value to a single <code>completion</code> &ndash; fulfilling the same role of <code>std::promise</code> to <code>std::future</code>.  <a href="classmonadic_1_1completion__promise.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmonadic_1_1completion__map__result.html">monadic::completion_map_result&lt; TCompletion, F &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A traits class for finding the result of calling <code>completion&lt;T&gt;::map</code>.  <a href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmonadic_1_1completion__recover__result.html">monadic::completion_recover_result&lt; TCompletion, F &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmonadic_1_1completion__recover__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_recover_result&lt; completion&lt; T &gt;, F &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A traits class for finding the result of calling <code>completion&lt;T&gt;::recover</code>.  <a href="structmonadic_1_1completion__recover__result_3_01completion_3_01T_01_4_00_01F_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmonadic_1_1completion__data.html">monadic::completion_data&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds data for a <code>completion</code> or <code><a class="el" href="classmonadic_1_1completion__promise.html" title="A completion_promise provides the promise of a delivery of some value to a single completion – fulfi...">completion_promise</a></code>.  <a href="structmonadic_1_1completion__data.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,6 +153,17 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonadic_1_1completion__promise.html">monadic::completion_promise&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <code><a class="el" href="classmonadic_1_1completion__promise.html" title="A completion_promise provides the promise of a delivery of some value to a single completion – fulfi...">completion_promise</a></code> provides the promise of a delivery of some value to a single <code>completion</code> &ndash; fulfilling the same role of <code>std::promise</code> to <code>std::future</code>.  <a href="classmonadic_1_1completion__promise.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a1562358b8c51a7e7fe37f02f302e05c6"><td class="memTemplParams" colspan="2"><a class="anchor" id="a1562358b8c51a7e7fe37f02f302e05c6"></a>
+template&lt;typename TCompletion , typename F &gt; </td></tr>
+<tr class="memitem:a1562358b8c51a7e7fe37f02f302e05c6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monadic::completion_map_result_t</b> = typename completion_map_result&lt; TCompletion, F &gt;::type</td></tr>
+<tr class="separator:a1562358b8c51a7e7fe37f02f302e05c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f74a5cd5c9ced113e92d76ec96daf08"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6f74a5cd5c9ced113e92d76ec96daf08"></a>
+template&lt;typename TCompletion , typename F &gt; </td></tr>
+<tr class="memitem:a6f74a5cd5c9ced113e92d76ec96daf08"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monadic::completion_recover_result_t</b> = typename completion_recover_result&lt; TCompletion, F &gt;::type</td></tr>
+<tr class="separator:a6f74a5cd5c9ced113e92d76ec96daf08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>

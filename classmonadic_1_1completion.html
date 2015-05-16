@@ -122,6 +122,9 @@ $(document).ready(function(){initNavTree('classmonadic_1_1completion.html','');}
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:ae27cac36f64ec194ff83fc4e04cae899"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae27cac36f64ec194ff83fc4e04cae899"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
+<tr class="separator:ae27cac36f64ec194ff83fc4e04cae899"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64426654b065bb0c85f533068e7bca23"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a64426654b065bb0c85f533068e7bca23"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>promise_type</b> = <a class="el" href="classmonadic_1_1completion__promise.html">completion_promise</a>&lt; T &gt;</td></tr>
 <tr class="separator:a64426654b065bb0c85f533068e7bca23"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,14 +144,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab592168e3ebff6c51ef738210655d919"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmonadic_1_1completion.html#ab592168e3ebff6c51ef738210655d919">disable</a> ()</td></tr>
 <tr class="memdesc:ab592168e3ebff6c51ef738210655d919"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables this <code>completion</code>.  <a href="#ab592168e3ebff6c51ef738210655d919">More...</a><br /></td></tr>
 <tr class="separator:ab592168e3ebff6c51ef738210655d919"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc13f2eb0870cabd18a171e5acd80fd8"><td class="memTemplParams" colspan="2"><a class="anchor" id="afc13f2eb0870cabd18a171e5acd80fd8"></a>
+<tr class="memitem:a4387b1e7d9d2c8342e41adc53a13bbee"><td class="memTemplParams" colspan="2">template&lt;typename Func &gt; </td></tr>
+<tr class="memitem:a4387b1e7d9d2c8342e41adc53a13bbee"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmonadic_1_1completion.html#a4387b1e7d9d2c8342e41adc53a13bbee">then</a> (Func &amp;&amp;func) -&gt; <a class="el" href="classmonadic_1_1completion.html">completion</a>&lt; decltype(func(std::declval&lt; <a class="el" href="classmonadic_1_1exceptional.html">exceptional</a>&lt; T &gt;&gt;()))&gt;</td></tr>
+<tr class="memdesc:a4387b1e7d9d2c8342e41adc53a13bbee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform the next step of the process when the value is delivered in either success or failure.  <a href="#a4387b1e7d9d2c8342e41adc53a13bbee">More...</a><br /></td></tr>
+<tr class="separator:a4387b1e7d9d2c8342e41adc53a13bbee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10ced95c9949d8aa78ae85d3082330fc"><td class="memTemplParams" colspan="2"><a class="anchor" id="a10ced95c9949d8aa78ae85d3082330fc"></a>
 template&lt;typename Func &gt; </td></tr>
-<tr class="memitem:afc13f2eb0870cabd18a171e5acd80fd8"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>map</b> (Func &amp;&amp;func) -&gt; <a class="el" href="classmonadic_1_1completion.html">completion</a>&lt; decltype(std::declval&lt; <a class="el" href="classmonadic_1_1exceptional.html">exceptional</a>&lt; T &gt;&gt;().map(std::forward&lt; Func &gt;(func)).<a class="el" href="classmonadic_1_1completion.html#a5ad6019190235d4889dfb227797a3e2a">get</a>())&gt;</td></tr>
-<tr class="separator:afc13f2eb0870cabd18a171e5acd80fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f3b5e0ea5145d41f2d22fa31e3c006d"><td class="memTemplParams" colspan="2"><a class="anchor" id="a6f3b5e0ea5145d41f2d22fa31e3c006d"></a>
+<tr class="memitem:a10ced95c9949d8aa78ae85d3082330fc"><td class="memTemplItemLeft" align="right" valign="top">completion_map_result_t&lt; <a class="el" href="classmonadic_1_1completion.html">completion</a>, Func &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>map</b> (Func &amp;&amp;func)</td></tr>
+<tr class="separator:a10ced95c9949d8aa78ae85d3082330fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47a161009ab5a66b8c12322af14b3379"><td class="memTemplParams" colspan="2"><a class="anchor" id="a47a161009ab5a66b8c12322af14b3379"></a>
 template&lt;typename Func &gt; </td></tr>
-<tr class="memitem:a6f3b5e0ea5145d41f2d22fa31e3c006d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>recover</b> (Func &amp;&amp;func) -&gt; <a class="el" href="classmonadic_1_1completion.html">completion</a>&lt; decltype(std::declval&lt; <a class="el" href="classmonadic_1_1exceptional.html">exceptional</a>&lt; T &gt;&gt;().recover(std::forward&lt; Func &gt;(func)).<a class="el" href="classmonadic_1_1completion.html#a5ad6019190235d4889dfb227797a3e2a">get</a>())&gt;</td></tr>
-<tr class="separator:a6f3b5e0ea5145d41f2d22fa31e3c006d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47a161009ab5a66b8c12322af14b3379"><td class="memTemplItemLeft" align="right" valign="top">completion_recover_result_t&lt; <a class="el" href="classmonadic_1_1completion.html">completion</a>, Func &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>recover</b> (Func &amp;&amp;func)</td></tr>
+<tr class="separator:a47a161009ab5a66b8c12322af14b3379"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -192,7 +199,7 @@ template&lt;typename T &gt; </div>
 <p>Disables this <code>completion</code>. </p>
 <p>It cannot be un-disabled! This is useful for notifying the thread fulfilling the promise that the receiver no longer cares about the value and is free to abandon processing. </p>
 
-<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00133">133</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
+<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00170">170</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
 
 </div>
 </div>
@@ -223,7 +230,7 @@ template&lt;typename T &gt; </div>
 <p>If the completion was completed in success, the value will be returned (on <code>void</code>, nothing is returned). If the completion was completed in failure, the exception will be thrown.</p>
 <dl class="section note"><dt>Note</dt><dd>This is <em>not</em> the intended use for a <code>completion</code> and only exists for convenient compatibility with <code>std::future</code>. While the majority of <code>completion</code> functions are implemented using spin locks, this function is expected to block, so it relies on <code>std::promise</code> and <code>std::future</code>, which are slow by comparison. </dd></dl>
 
-<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00123">123</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
+<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00160">160</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
 
 </div>
 </div>
@@ -261,7 +268,7 @@ template&lt;typename Func &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00095">95</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
+<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00132">132</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
 
 </div>
 </div>
@@ -290,7 +297,43 @@ template&lt;typename T &gt; </div>
 
 <p>Get the current state of this instance. </p>
 
-<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00084">84</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
+<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00121">121</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4387b1e7d9d2c8342e41adc53a13bbee"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<div class="memtemplate">
+template&lt;typename Func &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="classmonadic_1_1completion.html">monadic::completion</a>&lt; T &gt;::then </td>
+          <td>(</td>
+          <td class="paramtype">Func &amp;&amp;&#160;</td>
+          <td class="paramname"><em>func</em></td><td>)</td>
+          <td> -&gt; <a class="el" href="classmonadic_1_1completion.html">completion</a>&lt;decltype(func(std::declval&lt;<a class="el" href="classmonadic_1_1exceptional.html">exceptional</a>&lt;T&gt;&gt;()))&gt;
+    </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Perform the next step of the process when the value is delivered in either success or failure. </p>
+<dl class="section see"><dt>See also</dt><dd>map </dd>
+<dd>
+recover </dd></dl>
+
+<p>Definition at line <a class="el" href="completion_8hpp_source.html#l00183">183</a> of file <a class="el" href="completion_8hpp_source.html">completion.hpp</a>.</p>
 
 </div>
 </div>

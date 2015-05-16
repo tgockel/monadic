@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>monadic++: completion_chaining</title>
+<title>monadic++: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -47,7 +47,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
@@ -68,6 +68,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -80,7 +87,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
 </div>
 <script type="text/javascript">
-$(document).ready(function(){initNavTree('completion_chaining-example.html','');});
+$(document).ready(function(){initNavTree('structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html','');});
 </script>
 <div id="doc-content">
 <!-- window showing the filter options -->
@@ -99,36 +106,16 @@ $(document).ready(function(){initNavTree('completion_chaining-example.html','');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">completion_chaining</div>  </div>
+<div class="title">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt; Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<p>Perform the next step of the process when the value is delivered in success. The <em>func</em> is only called in the success case (see <code>recover</code> for the failure case).</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Func</td><td><code>R (*)(T&amp;&amp;)</code> or <code>R (*)()</code> if <code>T</code> is <code>void</code>; <code>R</code> can be <code>void</code> </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">func</td><td>This function takes in the successful result of this completion and returns another value. The result of this function will be delivered to the <code>completion_promise</code> that backs the <code>completion</code> returned from this function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a <code>completion</code> that will be completed with the result of <em>func</em>.</dd></dl>
-<p>completion chaining</p>
-<div class="fragment"><div class="line">completion_promise&lt;int&gt; p;</div>
-<div class="line">completion&lt;int&gt;         c1 = p.get_completion();</div>
-<div class="line">completion&lt;double&gt;      c2 = c1.map([] (<span class="keywordtype">int</span> x) { <span class="keywordflow">return</span> double(x); });</div>
-<div class="line">completion&lt;std::string&gt; c3 = c2.map([] (<span class="keywordtype">double</span> d) { <span class="keywordflow">return</span> to_string(d); );</div>
-<div class="line">completion&lt;void&gt;        c4 = c3.map([] (std::string s) { std::cout &lt;&lt; s; });</div>
-<div class="line">completion&lt;int&gt;         c5 = c4.map([] () { std::cout &lt;&lt; std::endl; <span class="keywordflow">return</span> 1; });</div>
-<div class="line">p.set_value(1);</div>
-<div class="line">c5.get();</div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>then </dd>
-<dd>
-recover</dd></dl>
-<div class="fragment"></div><!-- fragment --> </div><!-- contents -->
+
+<p>This is the complete list of members for <a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a>, including all inherited members.</p>
+<table class="directory">
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>exceptional_type</b> typedef (defined in <a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a>)</td><td class="entry"><a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>type</b> typedef (defined in <a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a>)</td><td class="entry"><a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>value_type</b> typedef (defined in <a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a>)</td><td class="entry"><a class="el" href="structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html">monadic::completion_map_result&lt; completion&lt; T &gt;, F &gt;</a></td><td class="entry"></td></tr>
+</table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

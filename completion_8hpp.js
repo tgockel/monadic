@@ -2,9 +2,15 @@ var completion_8hpp =
 [
     [ "completion", "classmonadic_1_1completion.html", "classmonadic_1_1completion" ],
     [ "completion_promise", "classmonadic_1_1completion__promise.html", "classmonadic_1_1completion__promise" ],
+    [ "completion_map_result", "structmonadic_1_1completion__map__result.html", null ],
+    [ "completion_map_result< completion< T >, F >", "structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4.html", "structmonadic_1_1completion__map__result_3_01completion_3_01T_01_4_00_01F_01_4" ],
+    [ "completion_recover_result", "structmonadic_1_1completion__recover__result.html", null ],
+    [ "completion_recover_result< completion< T >, F >", "structmonadic_1_1completion__recover__result_3_01completion_3_01T_01_4_00_01F_01_4.html", "structmonadic_1_1completion__recover__result_3_01completion_3_01T_01_4_00_01F_01_4" ],
     [ "completion_data", "structmonadic_1_1completion__data.html", "structmonadic_1_1completion__data" ],
     [ "completion", "classmonadic_1_1completion.html", "classmonadic_1_1completion" ],
     [ "completion_promise", "classmonadic_1_1completion__promise.html", "classmonadic_1_1completion__promise" ],
+    [ "completion_map_result_t", "completion_8hpp.html#a1562358b8c51a7e7fe37f02f302e05c6", null ],
+    [ "completion_recover_result_t", "completion_8hpp.html#a6f74a5cd5c9ced113e92d76ec96daf08", null ],
     [ "completion_state", "completion_8hpp.html#a84aca05c03d179c245b18143387a0458", [
       [ "no_value", "completion_8hpp.html#a84aca05c03d179c245b18143387a0458a4838c7ca558d80a769b7f550d6271c74", null ],
       [ "has_value", "completion_8hpp.html#a84aca05c03d179c245b18143387a0458a74f510617fc594986f85795a43ecb7cd", null ],
