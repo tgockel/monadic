@@ -20,11 +20,11 @@ install:
   - sudo apt-get install --yes --force-yes cmake
   - if [[ ${COMPILER} != *"clang"* ]]; then sudo apt-get install --yes --force-yes ${COMPILER}; fi
   - if [[ ${COMPILER} == *"clang"* ]]; then sudo apt-get install --yes --force-yes clang-3.7;   fi
-  - if [[ ${COVERAGE} -eq 1 ]];        then sudo pip install cpp-coveralls pyyaml;              fi
+  - if [[ ${CONF} -eq "cov" ]];        then sudo pip install cpp-coveralls pyyaml;              fi
 script:
   - ${COMPILER} --version
-  - make test CONF=${CONF} VERBOSE=1 COVERAGE=${COVERAGE}
-  - if [[ ${COVERAGE} == 1 ]]; then ./config/upload-coverage; fi
+  - make test CONF=${CONF} VERBOSE=1
+  - if [[ ${CONF} -eq "cov" ]]; then ./config/upload-coverage; fi
 after_success:
   - if [[ ${PUBLISH_DOCS} == 0 ]]; then                             echo "Skipping documentation publishing due PUBLISH_DOCS=${PUBLISH_DOCS}";                                   exit 0; fi
   - if [[ ${GIT_CURRENT_HASH} != ${GIT_MASTER_HASH} ]]; then        echo "Skipping documentation publishing due to non-master ${GIT_CURRENT_HASH} (master: ${GIT_MASTER_HASH})"; exit 0; fi
