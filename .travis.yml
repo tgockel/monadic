@@ -23,7 +23,7 @@ install:
   - if [[ ${CONF} -eq "cov" ]];        then sudo pip install cpp-coveralls pyyaml;              fi
 script:
   - ${COMPILER} --version
-  - make test CONF=${CONF} VERBOSE=1
+  - make test CXX=${COMPILER} CONF=${CONF} VERBOSE=1
   - if [[ ${CONF} -eq "cov" ]]; then ./config/upload-coverage; fi
 after_success:
   - if [[ ${PUBLISH_DOCS} == 0 ]]; then                             echo "Skipping documentation publishing due PUBLISH_DOCS=${PUBLISH_DOCS}";                                   exit 0; fi
