@@ -29,6 +29,42 @@ namespace monadic
 template <typename T> class completion;
 template <typename T> class completion_promise;
 
+template <typename TCompletion, typename F>
+struct completion_map_result;
+
+/** A traits class for finding the result of calling \c completion<T>::map
+ *  
+ *  \see completion_map_result_t
+**/
+template <typename T, typename F>
+struct completion_map_result<completion<T>, F>
+{
+    using exceptional_type = decltype(std::declval<exceptional<T>>().map(std::declval<F>()));
+    using value_type       = typename exceptional_type::value_type;
+    using type             = completion<value_type>;
+};
+
+template <typename TCompletion, typename F>
+using completion_map_result_t = typename completion_map_result<TCompletion, F>::type;
+
+template <typename TCompletion, typename F>
+struct completion_recover_result;
+
+/** A traits class for finding the result of calling \c completion<T>::recover
+ *  
+ *  \see completion_recover_result_t
+**/
+template <typename T, typename F>
+struct completion_recover_result<completion<T>, F>
+{
+    using exceptional_type = decltype(std::declval<exceptional<T>>().recover(std::declval<F>()));
+    using value_type       = typename exceptional_type::value_type;
+    using type             = completion<value_type>;
+};
+
+template <typename TCompletion, typename F>
+using completion_recover_result_t = typename completion_recover_result<TCompletion, F>::type;
+
 /** Describes the state of a \c completion or \c completion_promise.
  *  
  *  \dot
@@ -77,6 +113,7 @@ template <typename T>
 class completion
 {
 public:
+    using value_type   = T;
     using promise_type = completion_promise<T>;
     
 public:
@@ -137,6 +174,41 @@ public:
         impl_->callback_ = nullptr;
     }
     
+    /** Perform the next step of the process when the value is delivered in either success or failure.
+     *  
+     *  \see map
+     *  \see recover
+    **/
+    template <typename Func>
+    auto then(Func&& func)
+            -> completion<decltype(func(std::declval<exceptional<T>>()))>
+    {
+        using TResultPromise = typename completion<decltype(func(std::declval<exceptional<T>>()))>::promise_type;
+        
+        unique_lock lock(impl_->protect_);
+        if (impl_->state_ == completion_state::no_value)
+        {
+            TResultPromise result_promise;
+            impl_->callback_ = [result_promise, func] (exceptional<T>&& result) mutable
+                               {
+                                   result_promise.complete(try_to(std::move(func), std::move(result)));
+                               };
+            impl_->state_ = completion_state::has_callback;
+            return result_promise.get_completion();
+        }
+        else if (impl_->state_ == completion_state::has_value)
+        {
+            TResultPromise result_promise;
+            result_promise.complete(try_to(std::move(func), std::move(impl_->value_)));
+            impl_->state_ = completion_state::complete;
+            return result_promise.get_completion();
+        }
+        else
+        {
+            throw std::logic_error("invalid state to continue a completion");
+        }
+    }
+    
     /** Perform the next step of the process when the value is delivered in success. The \a func is only called in the
      *  success case (see \c recover for the failure case).
      *  
@@ -159,13 +231,14 @@ public:
      *  c5.get();
      *  \endcode
      *  
+     *  \see then
      *  \see recover
     **/
     template <typename Func>
-    auto map(Func&& func)
-            -> completion<decltype(std::declval<exceptional<T>>().map(std::forward<Func>(func)).get())>
+    completion_map_result_t<completion, Func> map(Func&& func)
     {
-        return wrap_call(std::forward<Func>(func), &exceptional<T>::map);
+        // TODO: Optimize the return when there is an exception -- currently this re-throws just to catch it inside then
+        return then([func] (exceptional<T> x) { return std::move(x).map(func).get(); });
     }
     
     /** Perform the next step of the process if the value is delivered in failure. The \a func is only called in the
@@ -209,12 +282,15 @@ public:
      *  }
      *  c.get();
      *  \endcode
+     *  
+     *  \see then
+     *  \see map
     **/
     template <typename Func>
-    auto recover(Func&& func)
-            -> completion<decltype(std::declval<exceptional<T>>().recover(std::forward<Func>(func)).get())>
+    completion_recover_result_t<completion, Func> recover(Func&& func)
     {
-        return wrap_call(std::forward<Func>(func), &exceptional<T>::recover);
+        // TODO: Optimize the return when there is an exception -- currently this re-throws just to catch it inside then
+        return then([func] (exceptional<T> x) { return std::move(x).recover(func).get(); });
     }
     
 private:
@@ -226,33 +302,6 @@ private:
     completion(std::shared_ptr<completion_data<T>> impl) :
             impl_(std::move(impl))
     { }
-    
-    template <typename TResult, typename Func, typename UFunc>
-    completion<TResult> wrap_call(Func&& func, TResult (exceptional<T>::* exfunc)(UFunc&&))
-    {
-        unique_lock lock(impl_->protect_);
-        if (impl_->state_ == completion_state::no_value)
-        {
-            completion_promise<TResult> result_promise;
-            impl_->callback_ = [result_promise, func, exfunc] (exceptional<T>&& result)
-                               {
-                                   result_promise.complete((std::move(result).*exfunc)(std::move(func)));
-                               };
-            impl_->state = completion_state::has_callback;
-            return result_promise.get_completion();
-        }
-        else if (impl_->state == completion_state::has_value)
-        {
-            completion_promise<TResult> result_promise;
-            result_promise.complete((std::move(impl_->value_).*exfunc)(std::forward<Func>(func)));
-            impl_->state = completion_state::complete;
-            return result_promise.get_completion();
-        }
-        else
-        {
-            throw std::logic_error("invalid state to continue a completion");
-        }
-    }
     
 private:
     std::shared_ptr<completion_data<T>> impl_;

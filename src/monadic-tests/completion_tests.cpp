@@ -33,6 +33,17 @@ TEST(completion_inline)
     ensure(c.state() == completion_state::complete);
 }
 
+TEST(completion_map)
+{
+    completion_promise<int> promise;
+    completion<int> fval = promise.get_completion();
+    std::size_t iterations = 20;
+    for (std::size_t idx = 0; idx < iterations; ++idx)
+        fval = fval.map([] (int x) { return x*2; });
+    promise.set_value(1);
+    ensure_eq(fval.get(), 1 << iterations);
+}
+
 TEST(completion_void_blocked)
 {
     completion_promise<void> promise;
@@ -53,6 +64,28 @@ TEST(completion_void_blocked)
     ensure(loop_until([&] { return got_value; }));
     
     waiter.join();
+}
+
+TEST(completion_disabled_does_nothing)
+{
+    completion_promise<void> promise;
+    completion<void> val = promise.get_completion();
+    bool got_callback = false;
+    val.on_complete([&got_callback] (exceptional<void>) { got_callback = true; });
+    val.disable();
+    promise.set_value();
+    ensure(!got_callback);
+}
+
+TEST(completion_promise_multiple_sets)
+{
+    completion_promise<void> promise;
+    completion<void> val = promise.get_completion();
+    bool got_callback = false;
+    val.on_complete([&got_callback] (exceptional<void>) { got_callback = true; });
+    promise.set_value();
+    ensure(got_callback);
+    ensure_throws(std::logic_error, promise.set_value());
 }
 
 }
