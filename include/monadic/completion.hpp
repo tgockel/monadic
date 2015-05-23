@@ -224,7 +224,7 @@ public:
      *  completion_promise<int> p;
      *  completion<int>         c1 = p.get_completion();
      *  completion<double>      c2 = c1.map([] (int x) { return double(x); });
-     *  completion<std::string> c3 = c2.map([] (double d) { return to_string(d); );
+     *  completion<std::string> c3 = c2.map([] (double d) { return to_string(d); });
      *  completion<void>        c4 = c3.map([] (std::string s) { std::cout << s; });
      *  completion<int>         c5 = c4.map([] () { std::cout << std::endl; return 1; });
      *  p.set_value(1);
